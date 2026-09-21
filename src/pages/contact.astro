@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const channels = [
+	{ label: 'Email', href: 'mailto:lautarovera@proton.me', text: 'lautarovera@proton.me' },
+	{ label: 'LinkedIn', href: 'https://www.linkedin.com/in/lautarovera', text: 'linkedin.com/in/lautarovera' },
+	{ label: 'GitHub', href: 'https://github.com/lautarovera', text: 'github.com/lautarovera' },
+];
+---
+
+<BaseLayout title="Contact" description="How to reach Lautaro Vera.">
+	<h1>Contact</h1>
+	<table class="contact">
+		<caption class="visually-hidden">Contact channels</caption>
+		<tbody>
+			{
+				channels.map(({ label, href, text }) => (
+					<tr>
+						<th scope="row">{label}</th>
+						<td>
+							<a class="mono" href={href}>{text}</a>
+						</td>
+					</tr>
+				))
+			}
+		</tbody>
+	</table>
+</BaseLayout>
+
+<style>
+	.contact {
+		max-width: var(--measure);
+		font-size: var(--text-base);
+	}
+	.contact th {
+		width: 7rem;
+		border-bottom-color: var(--rule);
+		color: var(--muted);
+		font-weight: 400;
+	}
+</style>

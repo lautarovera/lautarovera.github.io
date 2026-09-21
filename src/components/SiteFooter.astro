@@ -1,0 +1,26 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+	<p>
+		© {year} Lautaro Vera. Code <a href="https://github.com/lautarovera/lautarovera.github.io/blob/main/LICENSE">MIT</a>,
+		content <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
+		<a href="https://github.com/lautarovera/lautarovera.github.io">Source</a>.
+	</p>
+</footer>
+
+<style>
+	.site-footer {
+		border-top: 1px solid var(--rule);
+		padding: var(--space-3) 0 var(--space-5);
+		font-size: var(--text-sm);
+		color: var(--muted);
+	}
+	p {
+		margin: 0;
+	}
+	a {
+		color: inherit;
+	}
+</style>

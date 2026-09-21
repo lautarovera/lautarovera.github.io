@@ -1,0 +1,66 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { isoDate, type ArticleCollection } from '../lib/content';
+
+interface Props {
+	entries: CollectionEntry<ArticleCollection>[];
+	/** URL prefix for entries, e.g. "/blog/". */
+	basePath: string;
+}
+
+const { entries, basePath } = Astro.props;
+---
+
+{
+	entries.length === 0 ? (
+		<p class="muted">Nothing published yet.</p>
+	) : (
+		<ol class="article-list">
+			{entries.map(({ id, data }) => (
+				<li>
+					<time class="mono muted" datetime={data.date.toISOString()}>
+						{isoDate(data.date)}
+					</time>
+					<div>
+						<a href={`${basePath}${id}/`}>{data.title}</a>
+						{data.draft && <span class="mono muted"> [draft]</span>}
+						<p>{data.description}</p>
+					</div>
+				</li>
+			))}
+		</ol>
+	)
+}
+
+<style>
+	.article-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		max-width: calc(var(--measure) + 8rem);
+	}
+	li {
+		display: grid;
+		grid-template-columns: 7rem 1fr;
+		gap: var(--space-3);
+		padding: var(--space-3) 0;
+		border-bottom: 1px solid var(--rule);
+	}
+	time {
+		font-size: var(--text-sm);
+		padding-top: 0.15rem;
+	}
+	a {
+		font-weight: 600;
+	}
+	p {
+		margin: var(--space-1) 0 0;
+		color: var(--muted);
+	}
+	@media (max-width: 30rem) {
+		li {
+			grid-template-columns: 1fr;
+			gap: var(--space-1);
+		}
+	}
+</style>

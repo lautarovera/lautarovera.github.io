@@ -1,0 +1,60 @@
+---
+import '../styles/global.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+interface Props {
+	title?: string;
+	description?: string;
+	lang?: 'en' | 'es';
+	ogType?: 'website' | 'article';
+}
+
+const SITE_NAME = 'Lautaro Vera';
+const DEFAULT_DESCRIPTION = 'Embedded firmware engineer: firmware, hardware and Edge AI.';
+
+const {
+	title,
+	description = DEFAULT_DESCRIPTION,
+	lang = 'en',
+	ogType = 'website',
+} = Astro.props;
+
+const fullTitle = title ? `${title} — ${SITE_NAME}` : SITE_NAME;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang={lang}>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>{fullTitle}</title>
+		<meta name="description" content={description} />
+		<link rel="canonical" href={canonical} />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<link
+			rel="preload"
+			href="/fonts/ibm-plex-sans-latin-400-normal.woff2"
+			as="font"
+			type="font/woff2"
+			crossorigin
+		/>
+		<meta property="og:title" content={fullTitle} />
+		<meta property="og:description" content={description} />
+		<meta property="og:type" content={ogType} />
+		<meta property="og:url" content={canonical} />
+		<meta name="generator" content={Astro.generator} />
+	</head>
+	<body>
+		<a class="skip-link" href="#main">Skip to content</a>
+		<div class="page">
+			<SiteHeader />
+			<main id="main">
+				<slot />
+			</main>
+			<SiteFooter />
+		</div>
+	</body>
+</html>

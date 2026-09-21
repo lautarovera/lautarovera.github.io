@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleList from '../../components/ArticleList.astro';
+import { getPublished } from '../../lib/content';
+
+const projects = await getPublished('projects');
+---
+
+<BaseLayout
+	title="Projects"
+	description="Technical case studies: problem, decisions, validation on hardware, results."
+>
+	<h1>Projects</h1>
+	<ArticleList entries={projects} basePath="/projects/" />
+</BaseLayout>
