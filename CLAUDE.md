@@ -52,12 +52,23 @@ If AI was used during development, explain what was generated and what was verif
 
 ## Design direction
 - The site should feel like it belongs to someone who works close to the silicon:
-  precise, restrained, with well-organized information density. Draw on good
-  technical documentation (datasheets, reference manuals), not SaaS templates.
+  precise, with well-organized information density. Not SaaS templates.
+- Chosen direction (approved 2026-09-21): **silicon floorplan + live inference**.
+  - Centerpiece: the home page is a chip-die floorplan in SVG. Each block is a
+    site section (Edge AI, firmware, hardware, writing); articles are sub-blocks.
+  - Inside the Edge AI block, a small quantized model runs in the browser
+    (WASM) next to a live budget readout: RAM, inference time, ops. It is
+    evidence, not decoration: every number shown must be real and measured.
+  - Everything else (articles, about, contact) is quiet, datasheet-grade
+    documentation style: strict type, numbered sections, tables.
+- The centerpiece is the one place for ambition and interactivity. Do not
+  spread floorplan motifs, waveforms or effects to other pages.
+- The floorplan never replaces accessible navigation: a normal nav and a
+  plain list of the same content must always exist and work without JS.
 - Avoid generated-page clichés: identical rounded cards with shadows, decorative
   gradients, uppercase eyebrow labels above every heading, fade-in animations on
-  every section, cream background with terracotta accent, black background with acid green.
-- One memorable visual decision; everything else stays quiet.
+  every section, cream background with terracotta accent, black background with
+  acid green, PCB-trace wallpaper, glowing "AI" neural-network imagery.
 - Typography chosen with intent; line length under 80 characters.
 - Quality floor: responsive, light and dark mode, visible keyboard focus,
   respects reduced motion, accessible contrast, lightweight pages.
