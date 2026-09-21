@@ -4,6 +4,7 @@ description: Exercises every article element. Draft only; never built for produc
 date: 2026-09-21
 tags: [fixture]
 lang: en
+block: firmware
 draft: true
 ---
 

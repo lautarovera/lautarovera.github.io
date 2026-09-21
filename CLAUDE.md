@@ -44,7 +44,8 @@ evidence, not adjectives.
 - If a draft contains anything that could be under NDA, flag it before continuing.
 
 ## Technical article format
-Required frontmatter: title, description, date, tags, lang.
+Required frontmatter: title, description, date, tags, lang, block
+(`edge-ai`, `firmware` or `hardware`: where the article sits on the home-page die).
 Recommended structure: the problem; the constraints (memory, power, real-time);
 options considered; the decision and why; how it was validated on real hardware;
 what went wrong and what I would do differently.
@@ -55,14 +56,20 @@ If AI was used during development, explain what was generated and what was verif
   precise, with well-organized information density. Not SaaS templates.
 - Chosen direction (approved 2026-09-21): **silicon floorplan + live inference**.
   - Centerpiece: the home page is a chip-die floorplan in SVG. Each block is a
-    site section (Edge AI, firmware, hardware, writing); articles are sub-blocks.
+    domain (Edge AI, firmware, hardware); articles and case studies are cells
+    inside their block. The pad ring on the die edge links the I/O pages
+    (about, contact, profiles).
   - Inside the Edge AI block, a small quantized model runs in the browser
     (WASM) next to a live budget readout: RAM, inference time, ops. It is
     evidence, not decoration: every number shown must be real and measured.
-  - Everything else (articles, about, contact) is quiet, datasheet-grade
-    documentation style: strict type, numbered sections, tables.
-- The centerpiece is the one place for ambition and interactivity. Do not
-  spread floorplan motifs, waveforms or effects to other pages.
+- One visual language everywhere, one interactive centerpiece.
+  - The die defines the language: its layer colors are the site-wide color
+    tokens, and every page carries a small die locator in the header with
+    the current section's block lit.
+  - Article headers carry their block's color and position on the die.
+  - Reading surfaces stay calm: body text, tables and code are plain and
+    legible. Numbered sections are kept for skimming.
+  - Interactivity (zoom, live inference) lives only on the home page.
 - The floorplan never replaces accessible navigation: a normal nav and a
   plain list of the same content must always exist and work without JS.
 - Avoid generated-page clichés: identical rounded cards with shadows, decorative
