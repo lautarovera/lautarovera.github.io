@@ -1,0 +1,194 @@
+---
+import type { BlockDef, PadDef, PlacedCell, Rect } from '../lib/floorplan';
+import { PADS } from '../lib/floorplan';
+import type { ArticleCell } from '../lib/content';
+
+interface Props {
+	die: Rect;
+	blocks: readonly BlockDef[];
+	cells: PlacedCell<ArticleCell>[];
+	/** Width of the bond-pad ring along the die edge. */
+	ring: number;
+	/** Multiplies label sizes: the portrait die is drawn smaller. */
+	textScale?: number;
+	class?: string;
+}
+
+const { die, blocks, cells, ring, textScale = 1, class: className } = Astro.props;
+
+const cellsOf = (block: BlockDef) => cells.filter(({ cell }) => cell.block === block.id);
+
+// Pads sit in equal slots along the top edge, centred in the ring.
+const padSlot = die.w / PADS.length;
+const padWidth = Math.min(padSlot * 0.5, 14);
+const padHeight = ring * 0.3;
+const padX = (index: number) => die.x + padSlot * (index + 0.5) - padWidth / 2;
+const padY = die.y + ring * 0.12;
+
+const t = (size: number) => size * textScale;
+---
+
+<svg
+	class:list={['die', className]}
+	viewBox={`${die.x} ${die.y} ${die.w} ${die.h}`}
+	role="group"
+	aria-label="Site map drawn as a chip die"
+>
+	<rect class="substrate" x={die.x} y={die.y} width={die.w} height={die.h} />
+	<rect
+		class="seal"
+		x={die.x + ring}
+		y={die.y + ring}
+		width={die.w - ring * 2}
+		height={die.h - ring * 2}
+	/>
+
+	{
+		PADS.map((pad: PadDef, index: number) => (
+			<a href={pad.href} class="pad">
+				<title>{pad.label}</title>
+				<rect x={padX(index)} y={padY} width={padWidth} height={padHeight} rx={0.3} />
+				<text
+					x={padX(index) + padWidth / 2}
+					y={padY + padHeight + t(2.2)}
+					font-size={t(1.9)}
+					text-anchor="middle"
+				>
+					{pad.label}
+				</text>
+			</a>
+		))
+	}
+
+	{
+		blocks.map((block) => (
+			<g class:list={['block', `block-${block.id}`]}>
+				<rect x={block.rect.x} y={block.rect.y} width={block.rect.w} height={block.rect.h} />
+				<text
+					class="block-label"
+					x={block.rect.x + 2}
+					y={block.rect.y + t(3.6)}
+					font-size={t(2.7)}
+				>
+					{block.label.toUpperCase()}
+				</text>
+				{block.reserved && (
+					<g class="reserved">
+						<rect
+							x={block.reserved.x}
+							y={block.reserved.y}
+							width={block.reserved.w}
+							height={block.reserved.h}
+						/>
+						<text
+							x={block.reserved.x + block.reserved.w / 2}
+							y={block.reserved.y + block.reserved.h / 2 + t(0.7)}
+							font-size={t(1.9)}
+							text-anchor="middle"
+						>
+							reserved
+						</text>
+					</g>
+				)}
+				{cellsOf(block).map(({ cell, rect, position }) => (
+					<a href={cell.href} class="cell" aria-label={`${cell.title} (${position})`}>
+						<title>
+							{cell.title} ({position})
+						</title>
+						<rect x={rect.x} y={rect.y} width={rect.w} height={rect.h} rx={0.3} />
+					</a>
+				))}
+				{cellsOf(block).length === 0 && (
+					<text
+						class="empty"
+						x={block.cellArea.x}
+						y={block.cellArea.y + t(2.4)}
+						font-size={t(1.9)}
+					>
+						no cells yet
+					</text>
+				)}
+			</g>
+		))
+	}
+</svg>
+
+<style>
+	.die {
+		display: block;
+		width: 100%;
+		height: auto;
+		font-family: var(--font-mono);
+	}
+
+	.substrate {
+		fill: var(--die-substrate);
+	}
+	.seal {
+		fill: none;
+		stroke: var(--die-edge);
+		stroke-width: 0.3;
+	}
+
+	.pad rect {
+		fill: var(--die-pad);
+	}
+	.pad text {
+		fill: var(--die-label);
+	}
+	.pad:hover rect,
+	.pad:focus-visible rect {
+		fill: var(--fg);
+	}
+	.pad:hover text,
+	.pad:focus-visible text {
+		fill: var(--fg);
+	}
+
+	.block > rect {
+		fill: color-mix(in srgb, var(--block) var(--block-mix), var(--die-substrate));
+		stroke: color-mix(in srgb, var(--block) 45%, var(--die-substrate));
+		stroke-width: 0.3;
+	}
+	.block-label {
+		fill: var(--die-label);
+		letter-spacing: 0.12em;
+	}
+	.block-edge-ai {
+		--block: var(--block-edge-ai);
+	}
+	.block-firmware {
+		--block: var(--block-firmware);
+	}
+	.block-hardware {
+		--block: var(--block-hardware);
+	}
+
+	.reserved rect {
+		fill: none;
+		stroke: var(--die-edge);
+		stroke-width: 0.25;
+		stroke-dasharray: 1.2 1.2;
+	}
+	.reserved text,
+	.empty {
+		fill: var(--die-edge);
+	}
+
+	.cell rect {
+		fill: color-mix(in srgb, var(--block) var(--cell-mix), var(--die-substrate));
+		stroke: var(--block);
+		stroke-width: 0.25;
+	}
+	.cell:hover rect,
+	.cell:focus-visible rect {
+		fill: var(--block);
+	}
+	.cell:focus-visible {
+		outline: none;
+	}
+	.cell:focus-visible rect {
+		stroke: var(--fg);
+		stroke-width: 0.6;
+	}
+</style>

@@ -33,7 +33,7 @@ export interface PadDef {
 	href: string;
 }
 
-export const DIE: Rect = { x: 0, y: 0, w: 120, h: 80 };
+export const DIE: Rect = { x: 0, y: 0, w: 120, h: 76 };
 
 /** Band along the die edge that holds the bond pads. */
 export const PAD_RING_WIDTH = 7;
@@ -43,23 +43,54 @@ export const BLOCKS: readonly BlockDef[] = [
 		id: 'edge-ai',
 		label: 'Edge AI',
 		code: 'AI',
-		rect: { x: 9, y: 11, w: 60, h: 60 },
-		reserved: { x: 12, y: 17, w: 54, h: 26 },
-		cellArea: { x: 12, y: 46, w: 54, h: 22 },
+		rect: { x: 9, y: 11, w: 60, h: 56 },
+		reserved: { x: 12, y: 18, w: 54, h: 20 },
+		cellArea: { x: 12, y: 42, w: 54, h: 24 },
 	},
 	{
 		id: 'firmware',
 		label: 'Firmware',
 		code: 'FW',
-		rect: { x: 73, y: 11, w: 38, h: 28 },
+		rect: { x: 73, y: 11, w: 38, h: 26 },
 		cellArea: { x: 76, y: 17, w: 32, h: 19 },
 	},
 	{
 		id: 'hardware',
 		label: 'Hardware',
 		code: 'HW',
-		rect: { x: 73, y: 43, w: 38, h: 28 },
-		cellArea: { x: 76, y: 49, w: 32, h: 19 },
+		rect: { x: 73, y: 41, w: 38, h: 26 },
+		cellArea: { x: 76, y: 47, w: 32, h: 19 },
+	},
+];
+
+/**
+ * Portrait arrangement for narrow screens: same blocks, stacked, so the die
+ * stays legible instead of shrinking to unreadable text.
+ */
+export const DIE_PORTRAIT: Rect = { x: 0, y: 0, w: 80, h: 120 };
+
+export const BLOCKS_PORTRAIT: readonly BlockDef[] = [
+	{
+		id: 'edge-ai',
+		label: 'Edge AI',
+		code: 'AI',
+		rect: { x: 11, y: 11, w: 58, h: 47 },
+		reserved: { x: 14, y: 17, w: 52, h: 18 },
+		cellArea: { x: 14, y: 37, w: 52, h: 18 },
+	},
+	{
+		id: 'firmware',
+		label: 'Firmware',
+		code: 'FW',
+		rect: { x: 11, y: 62, w: 58, h: 22 },
+		cellArea: { x: 14, y: 68, w: 52, h: 13 },
+	},
+	{
+		id: 'hardware',
+		label: 'Hardware',
+		code: 'HW',
+		rect: { x: 11, y: 88, w: 58, h: 21 },
+		cellArea: { x: 14, y: 94, w: 52, h: 13 },
 	},
 ];
 
@@ -96,10 +127,13 @@ export interface PlacedCell<T extends CellInput = CellInput> {
  * never moves existing ones. Throws if a block is full: the die must then
  * be resized, not silently overflowed.
  */
-export function placeCells<T extends CellInput>(cells: readonly T[]): PlacedCell<T>[] {
+export function placeCells<T extends CellInput>(
+	cells: readonly T[],
+	blocks: readonly BlockDef[] = BLOCKS,
+): PlacedCell<T>[] {
 	const placed: PlacedCell<T>[] = [];
 
-	for (const block of BLOCKS) {
+	for (const block of blocks) {
 		const inBlock = cells
 			.filter((cell) => cell.block === block.id)
 			.sort((a, b) => a.date.valueOf() - b.date.valueOf() || a.id.localeCompare(b.id));

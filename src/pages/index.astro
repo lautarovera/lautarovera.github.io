@@ -1,19 +1,19 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArticleList from '../components/ArticleList.astro';
-import { getPublished } from '../lib/content';
+import Floorplan from '../components/Floorplan.astro';
+import { getPublished, toCells } from '../lib/content';
 
-// Interim home page. Phase 2 replaces the top with the die floorplan;
-// these plain lists stay as its accessible, no-JS equivalent.
 const projects = await getPublished('projects');
 const posts = await getPublished('blog');
+const cells = toCells(projects, posts);
 ---
 
 <BaseLayout>
 	<h1>Lautaro Vera</h1>
-	<p class="intro">
-		Senior embedded firmware engineer. Firmware, hardware and Edge AI.
-	</p>
+	<p class="intro">Senior embedded firmware engineer. Firmware, hardware and Edge AI.</p>
+
+	<Floorplan cells={cells} />
 
 	<h2>Projects</h2>
 	<ArticleList entries={projects} basePath="/projects/" />

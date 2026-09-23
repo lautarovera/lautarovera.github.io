@@ -1,0 +1,90 @@
+---
+import Die from './Die.astro';
+import type { ArticleCell } from '../lib/content';
+import {
+	BLOCKS,
+	BLOCKS_PORTRAIT,
+	DIE,
+	DIE_PORTRAIT,
+	PAD_RING_WIDTH,
+	placeCells,
+} from '../lib/floorplan';
+
+interface Props {
+	cells: ArticleCell[];
+}
+
+const { cells } = Astro.props;
+
+// Two arrangements of the same data; CSS shows one. Both are built at build
+// time, so the page needs no JavaScript.
+const landscape = placeCells(cells);
+const portrait = placeCells(cells, BLOCKS_PORTRAIT);
+const PORTRAIT_RING = 8;
+---
+
+<figure class="floorplan">
+	<div class="landscape">
+		<Die die={DIE} blocks={BLOCKS} cells={landscape} ring={PAD_RING_WIDTH} />
+	</div>
+	<div class="portrait">
+		<Die
+			die={DIE_PORTRAIT}
+			blocks={BLOCKS_PORTRAIT}
+			cells={portrait}
+			ring={PORTRAIT_RING}
+			textScale={1.35}
+		/>
+	</div>
+	<figcaption class="mono">
+		<span><i class="swatch macro"></i>case study</span>
+		<span><i class="swatch std"></i>article</span>
+		<span>pads: contact and profiles</span>
+	</figcaption>
+</figure>
+
+<style>
+	.floorplan {
+		margin: 0 0 var(--space-5);
+	}
+
+	.portrait {
+		display: none;
+	}
+	@media (max-width: 46rem) {
+		.landscape {
+			display: none;
+		}
+		.portrait {
+			display: block;
+			max-width: 26rem;
+			margin-inline: auto;
+		}
+	}
+
+	figcaption {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-2) var(--space-4);
+		margin-top: var(--space-2);
+		font-size: var(--text-sm);
+		color: var(--muted);
+	}
+	figcaption span {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-2);
+	}
+	.swatch {
+		display: inline-block;
+		height: 0.7rem;
+		background: color-mix(in srgb, var(--die-pad) var(--cell-mix), var(--die-substrate));
+		border: 1px solid var(--die-pad);
+	}
+	.swatch.macro {
+		width: 2rem;
+	}
+	.swatch.std {
+		width: 0.6rem;
+	}
+</style>

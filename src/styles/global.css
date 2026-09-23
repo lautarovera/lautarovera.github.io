@@ -41,6 +41,17 @@
 	--subtle: #f1f2f4;
 	--accent: #1d4ed8;
 
+	/* Die palette: layer colors of the floorplan, reused across the site. */
+	--die-substrate: #eceef2;
+	--die-edge: #b3b9c3;
+	--die-pad: #7e8590;
+	--die-label: #3d434c;
+	--block-edge-ai: #5340c4;
+	--block-firmware: #0f6f68;
+	--block-hardware: #8a5510;
+	--cell-mix: 22%;
+	--block-mix: 10%;
+
 	--font-sans: 'IBM Plex Sans', system-ui, sans-serif;
 	--font-mono: 'IBM Plex Mono', ui-monospace, monospace;
 
@@ -72,6 +83,16 @@
 		--rule: #2b2f35;
 		--subtle: #181b1f;
 		--accent: #8ab4ff;
+
+		--die-substrate: #14161b;
+		--die-edge: #3a404a;
+		--die-pad: #848b95;
+		--die-label: #c3c8d0;
+		--block-edge-ai: #9282ff;
+		--block-firmware: #2dd4bf;
+		--block-hardware: #f0a53f;
+		--cell-mix: 34%;
+		--block-mix: 16%;
 	}
 }
 
