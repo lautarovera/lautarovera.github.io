@@ -12,16 +12,25 @@ interface Props {
 	lang: 'en' | 'es';
 	draft: boolean;
 	block: BlockId;
+	cover?: { src: string; alt: string };
 	/** Position on the die, e.g. "FW-03". */
 	position?: string;
 }
 
-const { title, description, date, updated, tags, lang, draft, block, position } = Astro.props;
+const { title, description, date, updated, tags, lang, draft, block, cover, position } =
+	Astro.props;
 ---
 
 <BaseLayout title={title} description={description} lang={lang} ogType="article" die={block}>
 	<article>
-		<header class="article-header">
+		{
+			cover && (
+				<figure class="cover">
+					<img src={cover.src} alt={cover.alt} width="1200" height="630" />
+				</figure>
+			)
+		}
+		<header class:list={['article-header', { 'has-cover': cover }]}>
 			{draft && <p class="draft mono">DRAFT — not in production build</p>}
 			<h1>{title}</h1>
 			<p class="lede">{description}</p>
@@ -63,6 +72,25 @@ const { title, description, date, updated, tags, lang, draft, block, position } 
 </BaseLayout>
 
 <style>
+	.cover {
+		max-width: calc(var(--measure) + 12rem);
+		margin: 0 0 var(--space-4);
+		border: 1px solid var(--rule);
+		border-top: 3px solid var(--accent);
+	}
+	.cover img {
+		display: block;
+		width: 100%;
+		height: auto;
+		aspect-ratio: 1200 / 630;
+		object-fit: cover;
+	}
+	@media (min-width: 68rem) {
+		.cover {
+			margin-left: var(--gutter-left);
+		}
+	}
+
 	.article-header {
 		max-width: var(--measure);
 		border-top: 3px solid var(--accent);
@@ -70,6 +98,11 @@ const { title, description, date, updated, tags, lang, draft, block, position } 
 		margin-bottom: var(--space-5);
 		padding-bottom: var(--space-4);
 		border-bottom: 1px solid var(--rule);
+	}
+	/* The cover already carries the accent rule. */
+	.article-header.has-cover {
+		border-top: 0;
+		padding-top: 0;
 	}
 	@media (min-width: 68rem) {
 		.article-header {

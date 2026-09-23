@@ -1,12 +1,12 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ArticleList from '../../components/ArticleList.astro';
-import { getPublished } from '../../lib/content';
+import { getPublished, toListItems } from '../../lib/content';
 
 const posts = await getPublished('blog');
 ---
 
 <BaseLayout title="Blog" description="Technical articles on embedded firmware, hardware and Edge AI.">
 	<h1>Blog</h1>
-	<ArticleList entries={posts} basePath="/blog/" />
+	<ArticleList items={toListItems(posts, "/blog/")} />
 </BaseLayout>

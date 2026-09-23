@@ -14,6 +14,13 @@ const article = z.object({
 	lang: z.enum(['en', 'es']),
 	// Which block of the home-page die the entry sits in.
 	block: z.enum(BLOCK_IDS),
+	// Optional cover image, shown in lists and at the top of the article.
+	cover: z
+		.object({
+			src: z.string(),
+			alt: z.string(),
+		})
+		.optional(),
 	// Drafts render in `npm run dev` only, never in the production build.
 	draft: z.boolean().default(false),
 });

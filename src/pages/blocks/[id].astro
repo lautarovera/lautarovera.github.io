@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleList from '../../components/ArticleList.astro';
+import { getPublished, toListItems } from '../../lib/content';
+import { BLOCKS } from '../../lib/floorplan';
+
+export async function getStaticPaths() {
+	return BLOCKS.map((block) => ({ params: { id: block.id }, props: { block } }));
+}
+
+const { block } = Astro.props;
+
+const [projects, posts] = await Promise.all([getPublished('projects'), getPublished('blog')]);
+const items = [...toListItems(projects, '/projects/'), ...toListItems(posts, '/blog/')]
+	.filter((item) => item.data.block === block.id)
+	.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout
+	title={block.label}
+	description={`Case studies and articles in the ${block.label} block.`}
+	die={block.id}
+>
+	<p class="crumb mono"><a href="/">Die</a> / {block.code}</p>
+	<h1>{block.label}</h1>
+	<p class="count mono">{`${items.length} ${items.length === 1 ? 'entry' : 'entries'}`}</p>
+	<ArticleList items={items} />
+</BaseLayout>
+
+<style>
+	.crumb {
+		font-size: var(--text-sm);
+		color: var(--muted);
+		margin: 0 0 var(--space-2);
+	}
+	.count {
+		font-size: var(--text-sm);
+		color: var(--accent);
+		margin: 0 0 var(--space-4);
+	}
+</style>

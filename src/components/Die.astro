@@ -63,15 +63,18 @@ const t = (size: number) => size * textScale;
 	{
 		blocks.map((block) => (
 			<g class:list={['block', `block-${block.id}`]}>
-				<rect x={block.rect.x} y={block.rect.y} width={block.rect.w} height={block.rect.h} />
-				<text
-					class="block-label"
-					x={block.rect.x + 2}
-					y={block.rect.y + t(3.6)}
-					font-size={t(2.7)}
-				>
-					{block.label.toUpperCase()}
-				</text>
+				<a href={`/blocks/${block.id}/`} class="block-link" aria-label={`${block.label} block`}>
+					<title>{block.label}</title>
+					<rect x={block.rect.x} y={block.rect.y} width={block.rect.w} height={block.rect.h} />
+					<text
+						class="block-label"
+						x={block.rect.x + 2}
+						y={block.rect.y + t(3.6)}
+						font-size={t(2.7)}
+					>
+						{block.label.toUpperCase()}
+					</text>
+				</a>
 				{block.reserved && (
 					<g class="reserved">
 						<rect
@@ -145,7 +148,7 @@ const t = (size: number) => size * textScale;
 		fill: var(--fg);
 	}
 
-	.block > rect {
+	.block rect {
 		fill: color-mix(in srgb, var(--block) var(--block-mix), var(--die-substrate));
 		stroke: color-mix(in srgb, var(--block) 45%, var(--die-substrate));
 		stroke-width: 0.3;
@@ -162,6 +165,19 @@ const t = (size: number) => size * textScale;
 	}
 	.block-hardware {
 		--block: var(--block-hardware);
+	}
+
+	.block-link:hover rect,
+	.block-link:focus-visible rect {
+		fill: color-mix(in srgb, var(--block) calc(var(--block-mix) * 2), var(--die-substrate));
+		stroke: var(--block);
+	}
+	.block-link:focus-visible {
+		outline: none;
+	}
+	.block-link:hover .block-label,
+	.block-link:focus-visible .block-label {
+		fill: var(--fg);
 	}
 
 	.reserved rect {

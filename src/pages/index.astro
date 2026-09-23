@@ -2,24 +2,45 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArticleList from '../components/ArticleList.astro';
 import Floorplan from '../components/Floorplan.astro';
-import { getPublished, toCells } from '../lib/content';
+import { getPublished, isoDate, toCells, toListItems } from '../lib/content';
+import { BLOCKS } from '../lib/floorplan';
 
 const projects = await getPublished('projects');
 const posts = await getPublished('blog');
 const cells = toCells(projects, posts);
+
+const all = [...projects, ...posts];
+const latest = all.length > 0 ? isoDate(all[0].data.date) : undefined;
+const stats = [
+	{ value: String(projects.length), label: projects.length === 1 ? 'case study' : 'case studies' },
+	{ value: String(posts.length), label: posts.length === 1 ? 'article' : 'articles' },
+	{ value: String(BLOCKS.length), label: 'blocks' },
+	...(latest ? [{ value: latest, label: 'last update' }] : []),
+];
 ---
 
 <BaseLayout>
 	<h1>Lautaro Vera</h1>
 	<p class="intro">Senior embedded firmware engineer. Firmware, hardware and Edge AI.</p>
 
+	<dl class="stats mono" hidden={all.length === 0}>
+		{
+			stats.map(({ value, label }) => (
+				<div>
+					<dt>{label}</dt>
+					<dd>{value}</dd>
+				</div>
+			))
+		}
+	</dl>
+
 	<Floorplan cells={cells} />
 
 	<h2>Projects</h2>
-	<ArticleList entries={projects} basePath="/projects/" />
+	<ArticleList items={toListItems(projects, "/projects/")} />
 
 	<h2>Writing</h2>
-	<ArticleList entries={posts} basePath="/blog/" />
+	<ArticleList items={toListItems(posts, "/blog/")} />
 </BaseLayout>
 
 <style>
@@ -27,5 +48,29 @@ const cells = toCells(projects, posts);
 		font-size: var(--text-lg);
 		color: var(--muted);
 		max-width: var(--measure);
+	}
+
+	.stats {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-2) var(--space-5);
+		margin: var(--space-4) 0;
+		padding: var(--space-3) 0;
+		border-top: 1px solid var(--rule);
+		border-bottom: 1px solid var(--rule);
+	}
+	.stats div {
+		display: flex;
+		flex-direction: column-reverse;
+		gap: var(--space-1);
+	}
+	.stats dt {
+		font-size: var(--text-sm);
+		color: var(--muted);
+	}
+	.stats dd {
+		margin: 0;
+		font-size: var(--text-lg);
+		color: var(--accent);
 	}
 </style>

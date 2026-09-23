@@ -44,6 +44,24 @@ export async function getPublished<C extends ArticleCollection>(
 	return entries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 }
 
+/** An entry plus the URL it lives at, so lists can mix collections. */
+export interface ListItem {
+	id: string;
+	href: string;
+	data: CollectionEntry<ArticleCollection>['data'];
+}
+
+export function toListItems(
+	entries: CollectionEntry<ArticleCollection>[],
+	basePath: string,
+): ListItem[] {
+	return entries.map((entry) => ({
+		id: entry.id,
+		href: `${basePath}${entry.id}/`,
+		data: entry.data,
+	}));
+}
+
 /** Where this article sits on the die, e.g. "FW-03". */
 export async function diePosition(href: string): Promise<string | undefined> {
 	const [projects, posts] = await Promise.all([getPublished('projects'), getPublished('blog')]);
