@@ -1,4 +1,13 @@
 ---
+import DieLocator from './DieLocator.astro';
+import type { BlockId } from '../lib/floorplan';
+
+interface Props {
+	die?: BlockId | 'pads';
+}
+
+const { die } = Astro.props;
+
 const links = [
 	{ href: '/projects/', label: 'Projects' },
 	{ href: '/blog/', label: 'Blog' },
@@ -11,7 +20,10 @@ const isCurrent = (href: string) => path === href || path.startsWith(href);
 ---
 
 <header class="site-header">
-	<a class="name" href="/" aria-current={path === '/' ? 'page' : undefined}>Lautaro Vera</a>
+	<a class="name" href="/" aria-current={path === '/' ? 'page' : undefined}>
+		<DieLocator active={die} />
+		Lautaro Vera
+	</a>
 	<nav aria-label="Main">
 		<ul>
 			{
@@ -38,6 +50,9 @@ const isCurrent = (href: string) => path === href || path.startsWith(href);
 		border-bottom: 1px solid var(--rule);
 	}
 	.name {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-2);
 		font-weight: 600;
 		color: var(--fg);
 		text-decoration: none;

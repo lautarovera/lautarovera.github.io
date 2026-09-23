@@ -1,7 +1,7 @@
 ---
 import { render } from 'astro:content';
 import ArticleLayout from '../../layouts/ArticleLayout.astro';
-import { getPublished } from '../../lib/content';
+import { diePosition, getPublished } from '../../lib/content';
 
 export async function getStaticPaths() {
 	const projects = await getPublished('projects');
@@ -10,8 +10,9 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
+const position = await diePosition(`/projects/${entry.id}/`);
 ---
 
-<ArticleLayout {...entry.data}>
+<ArticleLayout {...entry.data} position={position}>
 	<Content />
 </ArticleLayout>

@@ -1,5 +1,5 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
-import type { CellInput } from './floorplan';
+import { placeCells, type CellInput } from './floorplan';
 
 export type ArticleCollection = 'blog' | 'projects';
 
@@ -18,7 +18,8 @@ export function toCells(
 		kind: CellInput['kind'],
 		basePath: string,
 	): ArticleCell => ({
-		id: entry.id,
+		// Unique across collections: a post and a case study may share a slug.
+		id: `${basePath}${entry.id}`,
 		kind,
 		block: entry.data.block,
 		date: entry.data.date,
@@ -41,6 +42,13 @@ export async function getPublished<C extends ArticleCollection>(
 		({ data }) => import.meta.env.DEV || !data.draft,
 	);
 	return entries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+}
+
+/** Where this article sits on the die, e.g. "FW-03". */
+export async function diePosition(href: string): Promise<string | undefined> {
+	const [projects, posts] = await Promise.all([getPublished('projects'), getPublished('blog')]);
+	const placed = placeCells(toCells(projects, posts));
+	return placed.find(({ cell }) => cell.href === href)?.position;
 }
 
 /** ISO date (YYYY-MM-DD): unambiguous in any locale. */

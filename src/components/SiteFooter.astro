@@ -4,9 +4,14 @@ const year = new Date().getFullYear();
 
 <footer class="site-footer">
 	<p>
-		© {year} Lautaro Vera. Code <a href="https://github.com/lautarovera/lautarovera.github.io/blob/main/LICENSE">MIT</a>,
-		content <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
-		<a href="https://github.com/lautarovera/lautarovera.github.io">Source</a>.
+		<span>© {year} Lautaro Vera</span>
+		<span>
+			Code <a href="https://github.com/lautarovera/lautarovera.github.io/blob/main/LICENSE">MIT</a>
+		</span>
+		<span>
+			Content <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>
+		</span>
+		<span><a href="https://github.com/lautarovera/lautarovera.github.io">Source</a></span>
 	</p>
 </footer>
 
@@ -18,7 +23,16 @@ const year = new Date().getFullYear();
 		color: var(--muted);
 	}
 	p {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-1) var(--space-3);
 		margin: 0;
+	}
+	/* Separator between the parts, except before the first one. */
+	span + span::before {
+		content: '·';
+		margin-right: var(--space-3);
+		color: var(--rule);
 	}
 	a {
 		color: inherit;

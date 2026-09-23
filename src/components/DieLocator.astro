@@ -1,0 +1,75 @@
+---
+import { BLOCKS, DIE, PADS, PAD_RING_WIDTH, type BlockId } from '../lib/floorplan';
+
+interface Props {
+	/** Which part of the die the current page belongs to. */
+	active?: BlockId | 'pads';
+}
+
+const { active } = Astro.props;
+
+const padSlot = DIE.w / PADS.length;
+const padWidth = padSlot * 0.5;
+const padHeight = PAD_RING_WIDTH * 0.3;
+---
+
+<svg class="locator" viewBox={`0 0 ${DIE.w} ${DIE.h}`} aria-hidden="true" focusable="false">
+	<rect class="substrate" x={DIE.x} y={DIE.y} width={DIE.w} height={DIE.h} />
+	{
+		PADS.map((_, index) => (
+			<rect
+				class:list={['pad', { on: active === 'pads' }]}
+				x={padSlot * (index + 0.5) - padWidth / 2}
+				y={PAD_RING_WIDTH * 0.12}
+				width={padWidth}
+				height={padHeight}
+			/>
+		))
+	}
+	{
+		BLOCKS.map((block) => (
+			<rect
+				class:list={['block', `block-${block.id}`, { on: active === block.id }]}
+				x={block.rect.x}
+				y={block.rect.y}
+				width={block.rect.w}
+				height={block.rect.h}
+			/>
+		))
+	}
+</svg>
+
+<style>
+	.locator {
+		width: 2rem;
+		height: auto;
+		flex: none;
+	}
+	.substrate {
+		fill: var(--die-substrate);
+	}
+	.pad {
+		fill: var(--die-edge);
+	}
+	.pad.on {
+		fill: var(--fg);
+	}
+	.block {
+		fill: none;
+		stroke: var(--die-edge);
+		stroke-width: 2;
+	}
+	.block.on {
+		fill: var(--block);
+		stroke: var(--block);
+	}
+	.block-edge-ai {
+		--block: var(--block-edge-ai);
+	}
+	.block-firmware {
+		--block: var(--block-firmware);
+	}
+	.block-hardware {
+		--block: var(--block-hardware);
+	}
+</style>

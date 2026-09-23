@@ -1,6 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import { isoDate } from '../lib/content';
+import type { BlockId } from '../lib/floorplan';
 
 interface Props {
 	title: string;
@@ -10,12 +11,15 @@ interface Props {
 	tags: string[];
 	lang: 'en' | 'es';
 	draft: boolean;
+	block: BlockId;
+	/** Position on the die, e.g. "FW-03". */
+	position?: string;
 }
 
-const { title, description, date, updated, tags, lang, draft } = Astro.props;
+const { title, description, date, updated, tags, lang, draft, block, position } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description} lang={lang} ogType="article">
+<BaseLayout title={title} description={description} lang={lang} ogType="article" die={block}>
 	<article>
 		<header class="article-header">
 			{draft && <p class="draft mono">DRAFT — not in production build</p>}
@@ -31,6 +35,14 @@ const { title, description, date, updated, tags, lang, draft } = Astro.props;
 						<div>
 							<dt>Updated</dt>
 							<dd><time datetime={updated.toISOString()}>{isoDate(updated)}</time></dd>
+						</div>
+					)
+				}
+				{
+					position && (
+						<div>
+							<dt>Die</dt>
+							<dd class="position">{position}</dd>
 						</div>
 					)
 				}
@@ -53,6 +65,8 @@ const { title, description, date, updated, tags, lang, draft } = Astro.props;
 <style>
 	.article-header {
 		max-width: var(--measure);
+		border-top: 3px solid var(--accent);
+		padding-top: var(--space-3);
 		margin-bottom: var(--space-5);
 		padding-bottom: var(--space-4);
 		border-bottom: 1px solid var(--rule);
@@ -82,6 +96,9 @@ const { title, description, date, updated, tags, lang, draft } = Astro.props;
 	}
 	.meta dd {
 		margin: 0;
+	}
+	.position {
+		color: var(--accent);
 	}
 	.draft {
 		font-size: var(--text-sm);

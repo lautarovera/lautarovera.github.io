@@ -3,11 +3,16 @@ import '../styles/global.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 
+import type { BlockId } from '../lib/floorplan';
+
 interface Props {
 	title?: string;
 	description?: string;
 	lang?: 'en' | 'es';
 	ogType?: 'website' | 'article';
+	/** Part of the die this page belongs to: lights the header locator and
+	 * tints the page accent with that block's color. */
+	die?: BlockId | 'pads';
 }
 
 const SITE_NAME = 'Lautaro Vera';
@@ -18,6 +23,7 @@ const {
 	description = DEFAULT_DESCRIPTION,
 	lang = 'en',
 	ogType = 'website',
+	die,
 } = Astro.props;
 
 const fullTitle = title ? `${title} — ${SITE_NAME}` : SITE_NAME;
@@ -25,7 +31,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={lang} data-block={die && die !== 'pads' ? die : undefined}>
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -50,7 +56,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 	<body>
 		<a class="skip-link" href="#main">Skip to content</a>
 		<div class="page">
-			<SiteHeader />
+			<SiteHeader die={die} />
 			<main id="main">
 				<slot />
 			</main>

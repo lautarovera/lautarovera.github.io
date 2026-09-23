@@ -39,7 +39,9 @@
 	--muted: #5c626b;
 	--rule: #dcdfe3;
 	--subtle: #f1f2f4;
-	--accent: #1d4ed8;
+	/* The page accent is a die layer color; article pages switch it to
+	   their own block below. */
+	--accent: var(--block-edge-ai);
 
 	/* Die palette: layer colors of the floorplan, reused across the site. */
 	--die-substrate: #eceef2;
@@ -82,7 +84,6 @@
 		--muted: #9ba2ab;
 		--rule: #2b2f35;
 		--subtle: #181b1f;
-		--accent: #8ab4ff;
 
 		--die-substrate: #14161b;
 		--die-edge: #3a404a;
@@ -94,6 +95,17 @@
 		--cell-mix: 34%;
 		--block-mix: 16%;
 	}
+}
+
+/* An article page takes the accent of its block on the die. */
+:root[data-block='edge-ai'] {
+	--accent: var(--block-edge-ai);
+}
+:root[data-block='firmware'] {
+	--accent: var(--block-firmware);
+}
+:root[data-block='hardware'] {
+	--accent: var(--block-hardware);
 }
 
 /* ---------- Base ---------- */
